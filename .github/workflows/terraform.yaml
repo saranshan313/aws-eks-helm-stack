@@ -20,11 +20,11 @@ permissions:
   contents: read  
  
 jobs:
- eks-staging-use1:
+ eks-helm-staging-use1:
    if: github.ref == 'refs/heads/staging' || github.event_name == 'pull_request'
    #name: 'Terraform Infrastructure Change Management - ${{ vars.ENVIRONMENT }}'
    runs-on: ubuntu-latest
-   environment: eks-staging-use1
+   environment: eks-helm-staging-use1
    defaults:
      run:
        shell: bash
@@ -54,11 +54,11 @@ jobs:
        with:
           terraform_workspace: ${{ vars.WORKSPACE }}
 
- eks-prod-use1:
+ eks-helm-prod-use1:
    if: github.ref == 'refs/heads/main'
    #name: 'Terraform Infrastructure Change Management - ${{ vars.ENVIRONMENT }}'
    runs-on: ubuntu-latest
-   environment: eks-prod-use1
+   environment: eks-helm-prod-use1
    defaults:
      run:
        shell: bash
