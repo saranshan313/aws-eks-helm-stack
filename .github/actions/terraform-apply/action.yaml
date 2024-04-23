@@ -1,0 +1,38 @@
+name: "Plan and Apply Terraform code"
+description: "Combining plan && apply actions into one"
+
+inputs:
+  terraform_workspace:
+    description: "Terraform Workspace"
+    required: true
+
+runs:
+  using: "composite"
+  
+  steps:
+    - uses: hashicorp/setup-terraform@v2
+    
+    - name: Terraform plan
+      if: github.event_name == 'pull_request'
+      run: |
+        terraform workspace select ${{ inputs.terraform_workspace }} || terraform workspace new ${{ inputs.terraform_workspace }}
+        terraform plan -no-color -input=false -var="TFC_WORKSPACE_NAME=${{ inputs.terraform_workspace }}" 
+      shell: bash
+      working-directory: terraform
+    
+    - name: Terraform apply
+      if: github.event_name == 'push'
+      run: |
+        terraform workspace select ${{ inputs.terraform_workspace }} || terraform workspace new ${{ inputs.terraform_workspace }}
+        terraform apply -auto-approve -input=false -var="TFC_WORKSPACE_NAME=${{ inputs.terraform_workspace }}"
+      shell: bash
+      working-directory: terraform
+
+    # - name: Terraform apply
+    #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    #   run: |
+    #     terraform workspace select ${{ inputs.terraform_workspace }} || terraform workspace new ${{ inputs.terraform_workspace }}
+    #     terraform apply -auto-approve -input=false -var="TFC_WORKSPACE_NAME=${{ inputs.terraform_workspace }}"
+    #   shell: bash
+    #   working-directory: terraform  
+

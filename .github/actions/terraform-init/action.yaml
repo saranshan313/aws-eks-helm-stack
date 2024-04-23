@@ -1,0 +1,44 @@
+name: "AWS Login and Terraform Init"
+description: "Combining AWS Login && terraform init actions into one"
+inputs:
+  # aws_access_key:
+  #   description: "AWS Access Key"
+  #   required: true
+  # aws_secret_access_key:
+  #   description: "AWS Secret Access Key"
+  #   required: true  
+  aws_iam_role:
+    description: "iam_role"
+    required: true
+  aws_region:
+    description: "region"
+    required: true
+  aws_backend_bucket:
+    description: "Bucket for Storing Statefiles"
+    required: true 
+  aws_backend_bucket_key:
+    description: "Bucket Key for Storing Statefiles"
+    required: true   
+  aws_backend_dynanmodb:
+    description: " DynamoDB Table for Locking Statefiles"
+    required: true
+runs:
+  using: "composite"
+  
+  steps:
+    - uses: hashicorp/setup-terraform@v2
+    
+    - name: "Setup: Configure AWS credentials"
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        # aws-access-key-id: ${{ inputs.aws_access_key }}
+        # aws-secret-access-key: ${{ inputs.aws_secret_access_key }}
+        role-to-assume: ${{ inputs.aws_iam_role }}
+        role-session-name: github-actions-terraform
+        role-duration-seconds: 3600
+        aws-region: ${{ inputs.aws_region }}
+    
+    - name: Terraform Init
+      run: terraform init -backend-config="bucket=${{ inputs.aws_backend_bucket }}" -backend-config="key=${{ inputs.aws_backend_bucket_key }}.tfstate" -backend-config="dynamodb_table=${{ inputs.aws_backend_dynanmodb }}"
+      shell: bash
+      working-directory: terraform
