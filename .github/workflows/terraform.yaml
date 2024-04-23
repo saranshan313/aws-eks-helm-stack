@@ -1,4 +1,4 @@
-name: Terraform Deployment - EKS
+name: Terraform Deployment - EKS Helm Charts
  
 on: 
 #  workflow_dispatch:
