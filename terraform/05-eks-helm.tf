@@ -25,7 +25,7 @@
 locals {
   aws_auth_configmap_data = yamlencode({
     "data" : {
-      mapRoles : yamlencode(data.kubernetes_config_map.deafult_aws_auth.data.mapRoles)
+      mapRoles : data.kubernetes_config_map.deafult_aws_auth.data.mapRoles
       mapUsers : yamlencode(local.settings.eks_cluster.aws_auth_config.cluster_admin)
       #      mapAccounts = yamlencode(local.map_accounts)
     }
