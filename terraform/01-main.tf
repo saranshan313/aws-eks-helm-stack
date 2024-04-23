@@ -19,7 +19,7 @@ provider "kubernetes" {
 data "terraform_remote_state" "eks" {
   backend = "s3"
   config = {
-    bucket = "tf-remote-state-234-343-555"
+    bucket = "tf-remote-state-234-343-555-666"
     key    = "env:/eks-${local.settings.env}-${local.settings.region}/eks-${local.settings.env}-${local.settings.region}.tfstate"
     region = local.regions[local.settings.region]
   }
