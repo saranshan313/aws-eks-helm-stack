@@ -22,3 +22,25 @@
 #     ]
 #   }
 # }
+locals {
+  aws_auth_configmap_data = yamlencode({
+    "data": {
+      mapRoles: yamlencode(data.kubernetes_config_map.deafult_aws_auth.data.mapRoles)
+      mapUsers: yamlencode(local.settings.eks_cluster.aws_auth_config.cluster_admin)
+#      mapAccounts = yamlencode(local.map_accounts)
+    }
+  })
+}
+
+resource "kubectl_manifest" "aws_auth" {
+  yaml_body = <<YAML
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: Terraform
+  name: aws-auth
+  namespace: kube-system
+${local.aws_auth_configmap_data}
+YAML
+}
