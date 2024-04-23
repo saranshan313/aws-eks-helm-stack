@@ -26,3 +26,10 @@ data "terraform_remote_state" "eks" {
 }
 
 #data "aws_caller_identity" "current" {}
+#Data to fetch existing AWS auth config data
+data "kubernetes_config_map" "deafult_aws_auth" {
+  metadata {
+    name      = "aws-auth"
+    namespace = "kube-system"
+  }
+}
