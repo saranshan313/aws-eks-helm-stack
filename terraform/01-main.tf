@@ -36,7 +36,24 @@ data "terraform_remote_state" "eks" {
   }
 }
 
+provider "helm" {
+  kubernetes {
+    host                   = data.terraform_remote_state.eks.outputs.eks_endpoint
+    cluster_ca_certificate = base64decode(data.terraform_remote_state.eks.outputs.eks_ca)
+
+    exec {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      args        = ["eks", "get-token", "--cluster-name", data.terraform_remote_state.eks.outputs.eks_cluster_name]
+      command     = "aws"
+    }
+  }
+}
+
 #data "aws_caller_identity" "current" {}
+
+#data "aws_region" "current" {}
+
+
 #Data to fetch existing AWS auth config data
 data "kubernetes_config_map" "deafult_aws_auth" {
   metadata {

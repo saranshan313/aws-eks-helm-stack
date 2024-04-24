@@ -1,27 +1,4 @@
 #Add Admin user to AWS Auth Config Map to provide access to EKS Cluster
-# resource "kubernetes_config_map" "aws_auth" {
-#   for_each = local.settings.eks_cluster.aws_auth_config
-#   metadata {
-#     name      = "aws-auth"
-#     namespace = "kube-system"
-#   }
-
-#   data = {
-#     userarn  = each.value["userarn"]
-#     username = each.value["username"]
-#     groups   = each.value["groups"]
-#   }
-
-#   lifecycle {
-#     # We are ignoring the data here since we will manage it with the resource below
-#     # This is only intended to be used in scenarios where the configmap does not exist
-#     ignore_changes = [
-#       data,
-#       metadata[0].labels,
-#       metadata[0].annotations
-#     ]
-#   }
-# }
 locals {
   aws_auth_configmap_data = yamlencode({
     "data" : {
@@ -43,4 +20,51 @@ metadata:
   namespace: kube-system
 ${local.aws_auth_configmap_data}
 YAML
+}
+
+#Install ALB Ingress Controller
+resource "helm_release" "alb_controller" {
+
+  name       = local.settings.alb_ingress_controller.chart_name
+  chart      = local.settings.alb_ingress_controller.chart_release_name
+  repository = local.settings.alb_ingress_controller.chart_repo_url
+  version    = local.settings.alb_ingress_controller.chart_version
+  namespace  = local.settings.alb_ingress_controller.namespace
+
+  create_namespace = local.settings.create_namespace
+  set {
+    name  = "clusterName"
+    value = data.terraform_remote_state.eks.outputs.eks_cluster_name
+  }
+
+  set {
+    name  = "awsRegion"
+    value = local.regions[local.settings.region]
+  }
+
+  set {
+    name  = "rbac.create"
+    value = "true"
+  }
+
+  set {
+    name  = "serviceAccount.create"
+    value = "true"
+  }
+
+  set {
+    name  = "serviceAccount.name"
+    value = local.settings.alb_ingress_controller.service_account
+  }
+
+  set {
+    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = data.terraform_remote_state.eks.outputs.alb_ingress_controller_role
+  }
+
+  set {
+    name  = "enableServiceMutatorWebhook"
+    value = "false"
+  }
+
 }

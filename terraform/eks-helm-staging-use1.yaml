@@ -10,3 +10,13 @@ eks_cluster:
         groups: 
           - system:masters
 
+#ALB Ingress Controller
+alb_ingress_controller:
+  chart_name: aws-load-balancer-controller
+  chart_release_name: aws-load-balancer-controller
+  chart_repo_url: https://aws.github.io/eks-charts
+  chart_version: 2.7.0
+  namespace: alb-ingress-controller
+  service_account: alb-ingress-controller
+  create_namespace: true
+
