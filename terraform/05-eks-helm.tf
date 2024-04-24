@@ -31,7 +31,8 @@ resource "helm_release" "alb_controller" {
   version    = local.settings.alb_ingress_controller.chart_version
   namespace  = local.settings.alb_ingress_controller.namespace
 
-  create_namespace = local.settings.create_namespace
+  create_namespace = local.settings.alb_ingress_controller.create_namespace
+
   set {
     name  = "clusterName"
     value = data.terraform_remote_state.eks.outputs.eks_cluster_name
