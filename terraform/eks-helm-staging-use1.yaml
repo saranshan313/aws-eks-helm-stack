@@ -15,7 +15,7 @@ alb_ingress_controller:
   chart_name: aws-load-balancer-controller
   chart_release_name: aws-load-balancer-controller
   chart_repo_url: https://aws.github.io/eks-charts
-  chart_version: v2.7.2
+  chart_version: 1.7.2
   namespace: alb-ingress-controller
   service_account: alb-ingress-controller
   create_namespace: true
