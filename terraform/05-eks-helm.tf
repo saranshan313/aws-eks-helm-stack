@@ -60,7 +60,7 @@ resource "helm_release" "alb_controller" {
 
   set {
     name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = data.terraform_remote_state.eks.outputs.alb_ingress_controller_role
+    value = aws_iam_role.alb_controller_role.arn
   }
 
   set {
@@ -68,4 +68,19 @@ resource "helm_release" "alb_controller" {
     value = "false"
   }
 
+}
+
+#Install Karpenter Controller
+resource "aws_ec2_tag" "applications_subnets" {
+  for_each    = data.terraform_remote_state.vpc.outputs.network_application_subnets
+  resource_id = each.value
+  key         = "Key=karpenter.sh/discovery"
+  value       = data.terraform_remote_state.eks.outputs.eks_cluster_name
+}
+
+resource "aws_ec2_tag" "nodegrp_sgs" {
+  for_each    = toset(data.terraform_remote_state.vpc.outputs.nodegrp_sgs)
+  resource_id = each.value
+  key         = "Key=karpenter.sh/discovery"
+  value       = data.terraform_remote_state.eks.outputs.eks_cluster_name
 }
