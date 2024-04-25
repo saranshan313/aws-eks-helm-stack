@@ -74,13 +74,13 @@ resource "helm_release" "alb_controller" {
 resource "aws_ec2_tag" "applications_subnets" {
   for_each    = data.terraform_remote_state.vpc.outputs.network_application_subnets
   resource_id = each.value
-  key         = "Key=karpenter.sh/discovery"
+  key         = "karpenter.sh/discovery"
   value       = data.terraform_remote_state.eks.outputs.eks_cluster_name
 }
 
 resource "aws_ec2_tag" "nodegrp_sgs" {
-  for_each    = toset(data.terraform_remote_state.vpc.outputs.eks_nodegrp_sgs)
+  for_each    = toset(data.terraform_remote_state.eks.outputs.eks_nodegrp_sgs)
   resource_id = each.value
-  key         = "Key=karpenter.sh/discovery"
+  key         = "karpenter.sh/discovery"
   value       = data.terraform_remote_state.eks.outputs.eks_cluster_name
 }
