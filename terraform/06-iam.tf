@@ -45,7 +45,7 @@ resource "aws_iam_policy" "alb_controller_permission_policy" {
   name        = "policy-${local.settings.env}-${local.settings.region}-alb-controller-01"
   path        = "/"
   description = "Permission policy for the ALB Ingress Controller"
-  policy      = file("./policies/ingress-permission.json")
+  policy      = file("./terraform/policies/ingress-permission.json")
 }
 
 resource "aws_iam_role_policy_attachment" "aws_alb_controller_permissions" {
@@ -54,7 +54,7 @@ resource "aws_iam_role_policy_attachment" "aws_alb_controller_permissions" {
 }
 
 #IAM Role for the Karpenter Controller
-data "aws_iam_policy_document" "karpenter_assume_policy" {
+data "aws_iam_policy_document" "karpenter_controller_assume_policy" {
 
   statement {
     actions = [
@@ -101,7 +101,7 @@ resource "aws_iam_policy" "karpenter_controller_permission_policy" {
   path        = "/"
   description = "Permission policy for the ALB Ingress Controller"
   policy = templatefile(
-    "./policies/karpenter-permission.json",
+    "./terraform/policies/karpenter-permission.json",
     {
       AWS_ACCOUNT_ID = "${data.aws_caller_identity.current.account_id}"
       CLUSTER_NAME   = "${data.terraform_remote_state.eks.outputs.eks_cluster_name}"
