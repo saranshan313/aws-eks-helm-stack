@@ -5,7 +5,7 @@ env: staging
 eks_cluster:
   aws_auth_config:
     cluster_admin:
-      - userarn: arn:aws:iam::851725166193:user/cloud_user
+      - userarn: arn:aws:iam::975049973928:user/cloud_user
         username: ClusterAdmin
         groups: 
           - system:masters

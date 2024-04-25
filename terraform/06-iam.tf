@@ -99,9 +99,9 @@ resource "aws_iam_role" "karpenter_controller_role" {
 resource "aws_iam_policy" "karpenter_controller_permission_policy" {
   name        = "policy-${local.settings.env}-${local.settings.region}-karpenter-controller-01"
   path        = "/"
-  description = "Permission policy for the ALB Ingress Controller"
+  description = "Permission policy for the Karpenter Controller"
   policy = templatefile(
-    file("./policies/karpenter-permission.json"),
+    "./policies/karpenter-permission.json",
     {
       AWS_ACCOUNT_ID = "${data.aws_caller_identity.current.account_id}"
       CLUSTER_NAME   = "${data.terraform_remote_state.eks.outputs.eks_cluster_name}"
