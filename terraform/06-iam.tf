@@ -103,9 +103,9 @@ resource "aws_iam_policy" "karpenter_controller_permission_policy" {
   policy = templatefile(
     "${path.module}/policies/karpenter-permission.json",
     {
-      AWS_ACCOUNT_ID = "${data.aws_caller_identity.current.account_id}"
-      CLUSTER_NAME   = "${data.terraform_remote_state.eks.outputs.eks_cluster_name}"
-      AWS_REGION     = "${local.regions[local.settings.region]}"
+      AWS_ACCOUNT_ID = data.aws_caller_identity.current.account_id
+      CLUSTER_NAME   = data.terraform_remote_state.eks.outputs.eks_cluster_name
+      AWS_REGION     = local.regions[local.settings.region]
     }
   )
 }
