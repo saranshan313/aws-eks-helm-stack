@@ -25,11 +25,13 @@ YAML
 #Install ALB Ingress Controller
 resource "helm_release" "alb_controller" {
 
-  name       = local.settings.alb_ingress_controller.chart_name
-  chart      = local.settings.alb_ingress_controller.chart_release_name
-  repository = local.settings.alb_ingress_controller.chart_repo_url
-  version    = local.settings.alb_ingress_controller.chart_version
-  namespace  = local.settings.alb_ingress_controller.namespace
+  name                = local.settings.alb_ingress_controller.chart_name
+  chart               = local.settings.alb_ingress_controller.chart_release_name
+  repository          = local.settings.alb_ingress_controller.chart_repo_url
+  repository_username = data.aws_ecrpublic_authorization_token.token.user_name
+  repository_password = data.aws_ecrpublic_authorization_token.token.password
+  version             = local.settings.alb_ingress_controller.chart_version
+  namespace           = local.settings.alb_ingress_controller.namespace
 
   create_namespace = local.settings.alb_ingress_controller.create_namespace
 
@@ -86,13 +88,15 @@ resource "aws_ec2_tag" "nodegrp_sgs" {
 }
 
 resource "helm_release" "karpenter_controller" {
-  name       = local.settings.karpenter_controller.chart_name
-  chart      = local.settings.karpenter_controller.chart_release_name
-  repository = local.settings.karpenter_controller.chart_repo_url
-  version    = local.settings.karpenter_controller.chart_version
-  namespace  = local.settings.karpenter_controller.namespace
-
-  create_namespace = local.settings.karpenter_controller.create_namespace
+  name                = local.settings.karpenter_controller.chart_name
+  chart               = local.settings.karpenter_controller.chart_release_name
+  repository          = local.settings.karpenter_controller.chart_repo_url
+  repository_username = data.aws_ecrpublic_authorization_token.token.user_name
+  repository_password = data.aws_ecrpublic_authorization_token.token.password
+  version             = local.settings.karpenter_controller.chart_version
+  namespace           = local.settings.karpenter_controller.namespace
+  wait                = false
+  create_namespace    = local.settings.karpenter_controller.create_namespace
 
   set {
     name  = "clusterName"

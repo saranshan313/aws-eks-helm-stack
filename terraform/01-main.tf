@@ -73,6 +73,7 @@ data "aws_caller_identity" "current" {}
 
 #data "aws_region" "current" {}
 
+data "aws_ecrpublic_authorization_token" "token" {}
 
 #Data to fetch existing AWS auth config data
 data "kubernetes_config_map" "deafult_aws_auth" {
