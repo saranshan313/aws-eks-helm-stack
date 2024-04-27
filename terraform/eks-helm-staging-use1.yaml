@@ -21,10 +21,10 @@ alb_ingress_controller:
   service_account: alb-ingress-controller-sa  
 
 karpenter_controller:
-  chart_name: 
-  chart_release_name: 
-  chart_repo_url: 
-  chart_version: 
+  chart_name: karpenter
+  chart_release_name: karpenter-controller
+  chart_repo_url: oci://public.ecr.aws/karpenter
+  chart_version: 0.36.0
   namespace: karpenter-controller
   create_namespace: true
   service_account: karpenter-controller-sa
