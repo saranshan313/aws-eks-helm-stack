@@ -139,7 +139,7 @@ resource "helm_release" "karpenter_controller" {
   }
 }
 
-resource "kubectl_manifest" "karpenter_provisioner" {
+resource "kubectl_manifest" "karpenter_nodepool_nodeclass" {
   yaml_body = <<-YAML
     apiVersion: karpenter.sh/v1beta1
     kind: NodePool
