@@ -23,7 +23,7 @@ alb_ingress_controller:
 karpenter_controller:
   chart_name: karpenter
   chart_release_name: karpenter
-  chart_repo_url: oci://public.ecr.aws/karpenter/karpenter
+  chart_repo_url: oci://public.ecr.aws/karpenter
   chart_version: 0.36.0
   namespace: karpenter-controller
   create_namespace: true
