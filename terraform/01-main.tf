@@ -90,7 +90,7 @@ data "http" "karpenter_nodepool_crd" {
 }
 
 data "kubectl_file_documents" "karpenter_nodepool_crd" {
-  content = data.http.karpenter_nodepool_crd.body
+  content = data.http.karpenter_nodepool_crd.response_body
 }
 
 data "http" "karpenter_nodeclass_crd" {
@@ -98,7 +98,7 @@ data "http" "karpenter_nodeclass_crd" {
 }
 
 data "kubectl_file_documents" "karpenter_nodeclass_crd" {
-  content = data.http.karpenter_nodeclass_crd.body
+  content = data.http.karpenter_nodeclass_crd.response_body
 }
 
 data "http" "karpenter_nodeclaim_crd" {
@@ -106,5 +106,5 @@ data "http" "karpenter_nodeclaim_crd" {
 }
 
 data "kubectl_file_documents" "karpenter_nodeclaim_crd" {
-  content = data.http.karpenter_nodeclaim_crd.body
+  content = data.http.karpenter_nodeclaim_crd.response_body
 }
