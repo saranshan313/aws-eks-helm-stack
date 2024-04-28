@@ -140,18 +140,18 @@ resource "helm_release" "karpenter_controller" {
 }
 
 resource "kubectl_manifest" "karpenter_crd_nodepool" {
-  for_each   = data.kubectl_file_documents.karpenter_nodepool_crd.manifests
-  yaml_body  = each.value
+  for_each  = data.kubectl_file_documents.karpenter_nodepool_crd.manifests
+  yaml_body = each.value
 }
 
 resource "kubectl_manifest" "karpenter_crd_nodeclass" {
-  for_each   = data.kubectl_file_documents.karpenter_nodeclass_crd.manifests
-  yaml_body  = each.value
+  for_each  = data.kubectl_file_documents.karpenter_nodeclass_crd.manifests
+  yaml_body = each.value
 }
 
 resource "kubectl_manifest" "karpenter_crd_nodeclaim" {
-  for_each   = data.kubectl_file_documents.karpenter_nodeclaim_crd.manifests
-  yaml_body  = each.value
+  for_each  = data.kubectl_file_documents.karpenter_nodeclaim_crd.manifests
+  yaml_body = each.value
 }
 
 resource "kubectl_manifest" "karpenter_nodepool_nodeclass" {
