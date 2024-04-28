@@ -24,7 +24,7 @@ runs:
       if: github.event_name == 'push'
       run: |
         terraform workspace select ${{ inputs.terraform_workspace }} || terraform workspace new ${{ inputs.terraform_workspace }}
-        terraform destroy -auto-approve -input=false -var="TFC_WORKSPACE_NAME=${{ inputs.terraform_workspace }}"
+        terraform apply -auto-approve -input=false -var="TFC_WORKSPACE_NAME=${{ inputs.terraform_workspace }}"
       shell: bash
       working-directory: terraform
 
