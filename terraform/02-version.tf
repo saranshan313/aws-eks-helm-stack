@@ -22,6 +22,10 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.13.1"
     }
+    http = {
+      source  = "hashicorp/http"
+      version = "3.4.2"
+    }
   }
 
   backend "s3" {
