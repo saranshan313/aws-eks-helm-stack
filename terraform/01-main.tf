@@ -60,20 +60,20 @@ data "terraform_remote_state" "eks" {
   }
 }
 
-# data "terraform_remote_state" "vpc" {
-#   backend = "s3"
-#   config = {
-#     bucket = "tf-remote-state-234-343-555-666-777"
-#     key    = "env:/infra-${local.settings.env}-${local.settings.region}/infra-${local.settings.env}-${local.settings.region}.tfstate"
-#     region = local.regions[local.settings.region]
-#   }
-# }
+data "terraform_remote_state" "vpc" {
+  backend = "s3"
+  config = {
+    bucket = "tf-remote-state-234-343-555-666-777"
+    key    = "env:/infra-${local.settings.env}-${local.settings.region}/infra-${local.settings.env}-${local.settings.region}.tfstate"
+    region = local.regions[local.settings.region]
+  }
+}
 
 data "aws_caller_identity" "current" {}
 
 #data "aws_region" "current" {}
 
-# data "aws_ecrpublic_authorization_token" "token" {}
+data "aws_ecrpublic_authorization_token" "token" {}
 
 #Data to fetch existing AWS auth config data
 data "kubernetes_config_map" "deafult_aws_auth" {
