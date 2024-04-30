@@ -22,55 +22,65 @@ ${local.aws_auth_configmap_data}
 YAML
 }
 
-# #Install ALB Ingress Controller
-# resource "helm_release" "alb_controller" {
+#Install ALB Ingress Controller
+resource "helm_release" "alb_controller" {
 
-#   name       = local.settings.alb_ingress_controller.chart_name
-#   chart      = local.settings.alb_ingress_controller.chart_release_name
-#   repository = local.settings.alb_ingress_controller.chart_repo_url
-#   #repository_username = data.aws_ecrpublic_authorization_token.token.user_name
-#   #repository_password = data.aws_ecrpublic_authorization_token.token.password
-#   version   = local.settings.alb_ingress_controller.chart_version
-#   namespace = local.settings.alb_ingress_controller.namespace
+  name       = local.settings.alb_ingress_controller.chart_name
+  chart      = local.settings.alb_ingress_controller.chart_release_name
+  repository = local.settings.alb_ingress_controller.chart_repo_url
+  #repository_username = data.aws_ecrpublic_authorization_token.token.user_name
+  #repository_password = data.aws_ecrpublic_authorization_token.token.password
+  version   = local.settings.alb_ingress_controller.chart_version
+  namespace = local.settings.alb_ingress_controller.namespace
 
-#   create_namespace = local.settings.alb_ingress_controller.create_namespace
+  create_namespace = local.settings.alb_ingress_controller.create_namespace
 
-#   set {
-#     name  = "clusterName"
-#     value = data.terraform_remote_state.eks.outputs.eks_cluster_name
-#   }
+  set {
+    name  = "clusterName"
+    value = data.terraform_remote_state.eks.outputs.eks_cluster_name
+  }
 
-#   set {
-#     name  = "awsRegion"
-#     value = local.regions[local.settings.region]
-#   }
+  set {
+    name  = "awsRegion"
+    value = local.regions[local.settings.region]
+  }
 
-#   set {
-#     name  = "rbac.create"
-#     value = "true"
-#   }
+  set {
+    name  = "rbac.create"
+    value = "true"
+  }
 
-#   set {
-#     name  = "serviceAccount.create"
-#     value = "true"
-#   }
+  set {
+    name  = "serviceAccount.create"
+    value = "true"
+  }
 
-#   set {
-#     name  = "serviceAccount.name"
-#     value = local.settings.alb_ingress_controller.service_account
-#   }
+  set {
+    name  = "serviceAccount.name"
+    value = local.settings.alb_ingress_controller.service_account
+  }
 
-#   set {
-#     name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-#     value = aws_iam_role.alb_controller_role.arn
-#   }
+  set {
+    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = aws_iam_role.alb_controller_role.arn
+  }
 
-#   set {
-#     name  = "enableServiceMutatorWebhook"
-#     value = "false"
-#   }
+  set {
+    name  = "enableServiceMutatorWebhook"
+    value = "false"
+  }
 
-# }
+  set {
+    name  = "image.repository"
+    value = "public.ecr.aws/eks/aws-load-balancer-controller"
+  }
+
+  set {
+    name  = "image.tag"
+    value = "v2.7.2"
+  }
+
+}
 
 #Install Karpenter Controller
 resource "aws_ec2_tag" "applications_subnets" {
@@ -136,6 +146,16 @@ resource "helm_release" "karpenter_controller" {
   set {
     name  = "defaultInstanceProfile"
     value = data.terraform_remote_state.eks.outputs.eks_node_instance_profile
+  }
+
+  set {
+    name  = "image.repository"
+    value = "public.ecr.aws/karpenter/controller"
+  }
+
+  set {
+    name  = "image.tag"
+    value = "0.36.1"
   }
 }
 
