@@ -57,20 +57,20 @@ provider "http" {}
 data "terraform_remote_state" "eks" {
   backend = "s3"
   config = {
-    bucket = "tf-remote-state-234-343-555"
+    bucket = "tf-remote-state-234-343-555-666"
     key    = "env:/eks-${local.settings.env}-${local.settings.region}/eks-${local.settings.env}-${local.settings.region}.tfstate"
     region = local.regions[local.settings.region]
   }
 }
 
-data "terraform_remote_state" "vpc" {
-  backend = "s3"
-  config = {
-    bucket = "tf-remote-state-234-343-555"
-    key    = "env:/infra-${local.settings.env}-${local.settings.region}/infra-${local.settings.env}-${local.settings.region}.tfstate"
-    region = local.regions[local.settings.region]
-  }
-}
+# data "terraform_remote_state" "vpc" {
+#   backend = "s3"
+#   config = {
+#     bucket = "tf-remote-state-234-343-555-666"
+#     key    = "env:/infra-${local.settings.env}-${local.settings.region}/infra-${local.settings.env}-${local.settings.region}.tfstate"
+#     region = local.regions[local.settings.region]
+#   }
+# }
 
 data "aws_caller_identity" "current" {}
 
@@ -86,26 +86,26 @@ data "kubernetes_config_map" "deafult_aws_auth" {
   }
 }
 
-data "http" "karpenter_nodepool_crd" {
-  url = "https://raw.githubusercontent.com/aws/karpenter-provider-aws/v0.36.0/pkg/apis/crds/karpenter.sh_nodepools.yaml"
-}
+# data "http" "karpenter_nodepool_crd" {
+#   url = "https://raw.githubusercontent.com/aws/karpenter-provider-aws/v0.36.0/pkg/apis/crds/karpenter.sh_nodepools.yaml"
+# }
 
-data "kubectl_file_documents" "karpenter_nodepool_crd" {
-  content = data.http.karpenter_nodepool_crd.response_body
-}
+# data "kubectl_file_documents" "karpenter_nodepool_crd" {
+#   content = data.http.karpenter_nodepool_crd.response_body
+# }
 
-data "http" "karpenter_nodeclass_crd" {
-  url = "https://raw.githubusercontent.com/aws/karpenter-provider-aws/v0.36.0/pkg/apis/crds/karpenter.k8s.aws_ec2nodeclasses.yaml"
-}
+# data "http" "karpenter_nodeclass_crd" {
+#   url = "https://raw.githubusercontent.com/aws/karpenter-provider-aws/v0.36.0/pkg/apis/crds/karpenter.k8s.aws_ec2nodeclasses.yaml"
+# }
 
-data "kubectl_file_documents" "karpenter_nodeclass_crd" {
-  content = data.http.karpenter_nodeclass_crd.response_body
-}
+# data "kubectl_file_documents" "karpenter_nodeclass_crd" {
+#   content = data.http.karpenter_nodeclass_crd.response_body
+# }
 
-data "http" "karpenter_nodeclaim_crd" {
-  url = "https://raw.githubusercontent.com/aws/karpenter-provider-aws/v0.36.0/pkg/apis/crds/karpenter.sh_nodeclaims.yaml"
-}
+# data "http" "karpenter_nodeclaim_crd" {
+#   url = "https://raw.githubusercontent.com/aws/karpenter-provider-aws/v0.36.0/pkg/apis/crds/karpenter.sh_nodeclaims.yaml"
+# }
 
-data "kubectl_file_documents" "karpenter_nodeclaim_crd" {
-  content = data.http.karpenter_nodeclaim_crd.response_body
-}
+# data "kubectl_file_documents" "karpenter_nodeclaim_crd" {
+#   content = data.http.karpenter_nodeclaim_crd.response_body
+# }

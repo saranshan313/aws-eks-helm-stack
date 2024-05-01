@@ -20,39 +20,39 @@ permissions:
   contents: read  
  
 jobs:
-#  eks-helm-staging-use1:
-#    if: github.ref == 'refs/heads/staging' || github.event_name == 'pull_request'
-#    #name: 'Terraform Infrastructure Change Management - ${{ vars.ENVIRONMENT }}'
-#    runs-on: ubuntu-latest
-#    environment: eks-helm-staging-use1
-#    defaults:
-#      run:
-#        shell: bash
-#        # We keep Terraform files in the terraform directory.
-#        working-directory: ./terraform
+ eks-helm-staging-use1:
+   if: github.ref == 'refs/heads/staging' || github.event_name == 'pull_request'
+   #name: 'Terraform Infrastructure Change Management - ${{ vars.ENVIRONMENT }}'
+   runs-on: ubuntu-latest
+   environment: eks-helm-staging-use1
+   defaults:
+     run:
+       shell: bash
+       # We keep Terraform files in the terraform directory.
+       working-directory: ./terraform
  
-#    steps:
-#      - name: 'Checkout the repository to the runner - ${{ vars.ENVIRONMENT }}'
-#        uses: actions/checkout@v2
+   steps:
+     - name: 'Checkout the repository to the runner - ${{ vars.ENVIRONMENT }}'
+       uses: actions/checkout@v2
 
-#      - name: 'AWS Login and Terraform init - ${{ vars.ENVIRONMENT }}'
-#        uses: ./.github/actions/terraform-init
-#        with:
-#         # aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#         # aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws_iam_role: ${{ vars.IAM_ROLE}}
-#          aws_region: ${{ vars.REGION }}
-#          aws_backend_bucket: ${{ vars.BUCKET_TF_STATE}}
-#          aws_backend_bucket_key: ${{ vars.ENVIRONMENT }}
-#          aws_backend_dynanmodb: ${{ vars.DYNAMODB_TABLE }}
+     - name: 'AWS Login and Terraform init - ${{ vars.ENVIRONMENT }}'
+       uses: ./.github/actions/terraform-init
+       with:
+        # aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        # aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+         aws_iam_role: ${{ vars.IAM_ROLE}}
+         aws_region: ${{ vars.REGION }}
+         aws_backend_bucket: ${{ vars.BUCKET_TF_STATE}}
+         aws_backend_bucket_key: ${{ vars.ENVIRONMENT }}
+         aws_backend_dynanmodb: ${{ vars.DYNAMODB_TABLE }}
  
-#      - name: 'Check and Validate - ${{ vars.ENVIRONMENT }}'
-#        uses: ./.github/actions/terraform-test
+     - name: 'Check and Validate - ${{ vars.ENVIRONMENT }}'
+       uses: ./.github/actions/terraform-test
   
-#      - name: 'Deploy to ${{ vars.ENVIRONMENT }}'
-#        uses: ./.github/actions/terraform-apply
-#        with:
-#           terraform_workspace: ${{ vars.WORKSPACE }}
+     - name: 'Deploy to ${{ vars.ENVIRONMENT }}'
+       uses: ./.github/actions/terraform-apply
+       with:
+          terraform_workspace: ${{ vars.WORKSPACE }}
 
 #  eks-helm-prod-use1:
 #    if: github.ref == 'refs/heads/main'
@@ -88,36 +88,36 @@ jobs:
 #        with:
 #           terraform_workspace: ${{ vars.WORKSPACE }}          
 
- eks-helm-staging-apse2:
-   if: github.ref == 'refs/heads/staging' || github.event_name == 'pull_request'
-   #name: 'Terraform Infrastructure Change Management - ${{ vars.ENVIRONMENT }}'
-   runs-on: ubuntu-latest
-   environment: eks-helm-staging-apse2
-   defaults:
-     run:
-       shell: bash
-       # We keep Terraform files in the terraform directory.
-       working-directory: ./terraform
+#  eks-helm-staging-apse2:
+#    if: github.ref == 'refs/heads/staging' || github.event_name == 'pull_request'
+#    #name: 'Terraform Infrastructure Change Management - ${{ vars.ENVIRONMENT }}'
+#    runs-on: ubuntu-latest
+#    environment: eks-helm-staging-apse2
+#    defaults:
+#      run:
+#        shell: bash
+#        # We keep Terraform files in the terraform directory.
+#        working-directory: ./terraform
  
-   steps:
-     - name: 'Checkout the repository to the runner - ${{ vars.ENVIRONMENT }}'
-       uses: actions/checkout@v2
+#    steps:
+#      - name: 'Checkout the repository to the runner - ${{ vars.ENVIRONMENT }}'
+#        uses: actions/checkout@v2
 
-     - name: 'AWS Login and Terraform init - ${{ vars.ENVIRONMENT }}'
-       uses: ./.github/actions/terraform-init
-       with:
-        # aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        # aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-         aws_iam_role: ${{ vars.IAM_ROLE}}
-         aws_region: ${{ vars.REGION }}
-         aws_backend_bucket: ${{ vars.BUCKET_TF_STATE}}
-         aws_backend_bucket_key: ${{ vars.ENVIRONMENT }}
-         aws_backend_dynanmodb: ${{ vars.DYNAMODB_TABLE }}
+#      - name: 'AWS Login and Terraform init - ${{ vars.ENVIRONMENT }}'
+#        uses: ./.github/actions/terraform-init
+#        with:
+#         # aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#         # aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws_iam_role: ${{ vars.IAM_ROLE}}
+#          aws_region: ${{ vars.REGION }}
+#          aws_backend_bucket: ${{ vars.BUCKET_TF_STATE}}
+#          aws_backend_bucket_key: ${{ vars.ENVIRONMENT }}
+#          aws_backend_dynanmodb: ${{ vars.DYNAMODB_TABLE }}
  
-     - name: 'Check and Validate - ${{ vars.ENVIRONMENT }}'
-       uses: ./.github/actions/terraform-test
+#      - name: 'Check and Validate - ${{ vars.ENVIRONMENT }}'
+#        uses: ./.github/actions/terraform-test
   
-     - name: 'Deploy to ${{ vars.ENVIRONMENT }}'
-       uses: ./.github/actions/terraform-apply
-       with:
-          terraform_workspace: ${{ vars.WORKSPACE }}
+#      - name: 'Deploy to ${{ vars.ENVIRONMENT }}'
+#        uses: ./.github/actions/terraform-apply
+#        with:
+#           terraform_workspace: ${{ vars.WORKSPACE }}
