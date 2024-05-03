@@ -108,4 +108,4 @@ data "kubernetes_config_map" "deafult_aws_auth" {
 
 # data "kubectl_file_documents" "karpenter_nodeclaim_crd" {
 #   content = data.http.karpenter_nodeclaim_crd.response_body
-}
+# }
