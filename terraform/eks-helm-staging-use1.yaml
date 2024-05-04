@@ -2,19 +2,19 @@ region: use1
 env: staging
 
 #EKS Cluster
-eks_cluster:
-  aws_auth_config:
-    cluster_admin_roles:
-      - rolearn: NODEGROUP_ROLE_ARN
-        username: system:node:{{EC2PrivateDNSName}}
-        groups: 
-          - system:bootstrappers
-          - system:nodes
-    cluster_admin_users:
-      - userarn: arn:aws:iam::ACCOUNT_ID:user/cloud_user
-        username: ClusterAdmin
-        groups: 
-          - system:masters
+# eks_cluster:
+#   aws_auth_config:
+#     cluster_admin_roles:
+#       - rolearn: NODEGROUP_ROLE_ARN
+#         username: system:node:{{EC2PrivateDNSName}}
+#         groups: 
+#           - system:bootstrappers
+#           - system:nodes
+#     cluster_admin_users:
+#       - userarn: arn:aws:iam::ACCOUNT_ID:user/cloud_user
+#         username: ClusterAdmin
+#         groups: 
+#           - system:masters
 
 #ALB Ingress Controller
 alb_ingress_controller:
