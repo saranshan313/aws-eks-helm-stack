@@ -6,13 +6,14 @@ locals {
       #mapRoles : data.kubernetes_config_map.deafult_aws_auth.data.mapRoles
       mapRoles : yamlencode(
         replace(
-          yamldecode(local.settings.eks_cluster.aws_auth_config.cluster_admin_roles),
+          tostring(local.settings.eks_cluster.aws_auth_config.cluster_admin_roles),
           "NODEGROUP_ROLE_ARN",
           data.terraform_remote_state.eks.outputs.eks_node_group_role_arn
         )
       )
       mapUsers : yamlencode(
-        replace(yamldecode(local.settings.eks_cluster.aws_auth_config.cluster_admin_users),
+        replace(
+          tostring(local.settings.eks_cluster.aws_auth_config.cluster_admin_users),
           "AWS_ACCOUNT_ID",
           data.aws_caller_identity.current.account_id
         )
