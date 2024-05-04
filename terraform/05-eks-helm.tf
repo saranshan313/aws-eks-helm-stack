@@ -175,7 +175,7 @@ resource "kubectl_manifest" "karpenter_crd_nodeclaim" {
   yaml_body = each.value
 }
 
-resource "kubectl_manifest" "karpenter_nodepool_nodeclass" {
+resource "kubectl_manifest" "karpenter_nodepool" {
   yaml_body = <<-YAML
     apiVersion: karpenter.sh/v1beta1
     kind: NodePool
@@ -216,6 +216,28 @@ resource "kubectl_manifest" "karpenter_nodepool_nodeclass" {
         consolidationPolicy: WhenUnderutilized
         expireAfter: 720h # 30 * 24h = 720h
     ---
+    apiVersion: karpenter.k8s.aws/v1beta1
+    kind: EC2NodeClass
+    metadata:
+      name: default
+    spec:
+      amiFamily: AL2 # Amazon Linux 2
+      role: "KarpenterNodeRole-${data.terraform_remote_state.eks.outputs.eks_node_group_role_arn}"
+      subnetSelectorTerms:
+        - tags:
+            karpenter.sh/discovery: "${data.terraform_remote_state.eks.outputs.eks_cluster_name}"
+      securityGroupSelectorTerms:
+        - tags:
+            karpenter.sh/discovery: "${data.terraform_remote_state.eks.outputs.eks_cluster_name}"
+  YAML
+
+  depends_on = [
+    helm_release.karpenter_controller
+  ]
+}
+
+resource "kubectl_manifest" "karpenter_ec2nodeclass" {
+  yaml_body = <<-YAML
     apiVersion: karpenter.k8s.aws/v1beta1
     kind: EC2NodeClass
     metadata:
