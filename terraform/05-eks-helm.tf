@@ -146,7 +146,7 @@ resource "helm_release" "karpenter_controller" {
 
   set {
     name  = "defaultInstanceProfile"
-    value = data.terraform_remote_state.eks.outputs.eks_node_instance_profile
+    value = data.terraform_remote_state.eks.outputs.eks_node_instance_profile_arn
   }
 
   # set {
@@ -215,20 +215,6 @@ resource "kubectl_manifest" "karpenter_nodepool" {
       disruption:
         consolidationPolicy: WhenUnderutilized
         expireAfter: 720h # 30 * 24h = 720h
-    ---
-    apiVersion: karpenter.k8s.aws/v1beta1
-    kind: EC2NodeClass
-    metadata:
-      name: default
-    spec:
-      amiFamily: AL2 # Amazon Linux 2
-      role: "KarpenterNodeRole-${data.terraform_remote_state.eks.outputs.eks_node_group_role_arn}"
-      subnetSelectorTerms:
-        - tags:
-            karpenter.sh/discovery: "${data.terraform_remote_state.eks.outputs.eks_cluster_name}"
-      securityGroupSelectorTerms:
-        - tags:
-            karpenter.sh/discovery: "${data.terraform_remote_state.eks.outputs.eks_cluster_name}"
   YAML
 
   depends_on = [
@@ -244,7 +230,7 @@ resource "kubectl_manifest" "karpenter_ec2nodeclass" {
       name: default
     spec:
       amiFamily: AL2 # Amazon Linux 2
-      role: "${data.terraform_remote_state.eks.outputs.eks_node_group_role_arn}"
+      instanceProfile: "${data.terraform_remote_state.eks.outputs.eks_node_instance_profile_name}"
       subnetSelectorTerms:
         - tags:
             karpenter.sh/discovery: "${data.terraform_remote_state.eks.outputs.eks_cluster_name}"
