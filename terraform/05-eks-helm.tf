@@ -244,7 +244,7 @@ resource "kubectl_manifest" "karpenter_ec2nodeclass" {
       name: default
     spec:
       amiFamily: AL2 # Amazon Linux 2
-      role: "KarpenterNodeRole-${data.terraform_remote_state.eks.outputs.eks_node_group_role_arn}"
+      role: "${data.terraform_remote_state.eks.outputs.eks_node_group_role_arn}"
       subnetSelectorTerms:
         - tags:
             karpenter.sh/discovery: "${data.terraform_remote_state.eks.outputs.eks_cluster_name}"
