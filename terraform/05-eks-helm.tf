@@ -1,36 +1,54 @@
 #Add Admin user to AWS Auth Config Map to provide access to EKS Cluster
 locals {
-  aws_auth_configmap_data = yamlencode(
-    templatefile(
-      "${path.module}/policies/aws-auth.json",
-      {
-        AWS_ACCOUNT_ID  = data.aws_caller_identity.current.account_id
-        NODE_GROUP_ROLE = data.terraform_remote_state.eks.outputs.eks_node_group_role_arn
-      }
-    )
-  )
-  # aws_auth_configmap_data = yamlencode({
-  #   "data" : {
-  #     #mapRoles : yamlencode(concat(yamldecode(data.kubernetes_config_map.deafult_aws_auth.data.mapRoles), local.settings.eks_cluster.aws_auth_config.cluster_admin))
-  #     #mapRoles : data.kubernetes_config_map.deafult_aws_auth.data.mapRoles
-  #     mapRoles : yamlencode(
-  #       replace(
-  #         tostring(local.settings.eks_cluster.aws_auth_config.cluster_admin_roles),
-  #         "NODEGROUP_ROLE_ARN",
-  #         data.terraform_remote_state.eks.outputs.eks_node_group_role_arn
-  #       )
-  #     )
-  #     mapUsers : yamlencode(
-  #       replace(
-  #         tostring(local.settings.eks_cluster.aws_auth_config.cluster_admin_users),
-  #         "AWS_ACCOUNT_ID",
-  #         data.aws_caller_identity.current.account_id
-  #       )
-  #     )
-  #     #      mapAccounts = yamlencode(local.map_accounts)
-  #   }
-  # })
+  aws_auth_configmap_data = yamlencode({
+    "data" : {
+      mapRoles : yamlencode(
+        jsondecode(
+          templatefile(
+            "${path.module}/policies/aws-auth.json",
+            {
+              NODE_GROUP_ROLE = data.terraform_remote_state.eks.outputs.eks_node_group_role_arn
+            }
+          )
+        )
+      )
+      mapUsers : yamlencode(
+        jsondecode(
+          templatefile(
+            "${path.module}/policies/aws-auth.json",
+            {
+              AWS_ACCOUNT_ID = data.aws_caller_identity.current.account_id
+
+            }
+          )
+        )
+      )
+    }
+  })
 }
+
+# aws_auth_configmap_data = yamlencode({
+#   "data" : {
+#     #mapRoles : yamlencode(concat(yamldecode(data.kubernetes_config_map.deafult_aws_auth.data.mapRoles), local.settings.eks_cluster.aws_auth_config.cluster_admin))
+#     #mapRoles : data.kubernetes_config_map.deafult_aws_auth.data.mapRoles
+#     mapRoles : yamlencode(
+#       replace(
+#         tostring(local.settings.eks_cluster.aws_auth_config.cluster_admin_roles),
+#         "NODEGROUP_ROLE_ARN",
+#         data.terraform_remote_state.eks.outputs.eks_node_group_role_arn
+#       )
+#     )
+#     mapUsers : yamlencode(
+#       replace(
+#         tostring(local.settings.eks_cluster.aws_auth_config.cluster_admin_users),
+#         "AWS_ACCOUNT_ID",
+#         data.aws_caller_identity.current.account_id
+#       )
+#     )
+#     #      mapAccounts = yamlencode(local.map_accounts)
+#   }
+# })
+#}
 
 resource "kubectl_manifest" "aws_auth" {
   yaml_body = <<YAML
