@@ -115,7 +115,7 @@ resource "helm_release" "karpenter_controller" {
   }
 
   set {
-    name  = "clusterEnpoint"
+    name  = "clusterEndpoint"
     value = data.terraform_remote_state.eks.outputs.eks_endpoint
   }
 
@@ -136,7 +136,7 @@ resource "helm_release" "karpenter_controller" {
 
   set {
     name  = "serviceAccount.name"
-    value = local.settings.alb_ingress_controller.service_account
+    value = local.settings.karpenter_controller.service_account
   }
 
   set {
