@@ -2,7 +2,7 @@
     "data": {
         "mapRoles": [
             {
-                "rolearn": "${NODEGROUP_ROLE}",
+                "rolearn": "${NODE_GROUP_ROLE}",
                 "username": "system:node:{{EC2PrivateDNSName}}",
                 "groups": [
                     "system:bootstrappers",
