@@ -110,12 +110,12 @@ resource "helm_release" "karpenter_controller" {
   create_namespace = local.settings.karpenter_controller.create_namespace
 
   set {
-    name  = "clusterName"
+    name  = "settings.clusterName"
     value = data.terraform_remote_state.eks.outputs.eks_cluster_name
   }
 
   set {
-    name  = "clusterEndpoint"
+    name  = "settings.clusterEndpoint"
     value = data.terraform_remote_state.eks.outputs.eks_endpoint
   }
 
