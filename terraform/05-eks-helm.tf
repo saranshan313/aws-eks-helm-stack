@@ -1,6 +1,6 @@
 #Add Admin user to AWS Auth Config Map to provide access to EKS Cluster
 locals {
-  aws_auth_configmap_data = yamlencode(jsondecode(
+  aws_auth_configmap_data = yamlencode(
     templatefile(
       "${path.module}/policies/aws-auth.json",
       {
@@ -8,7 +8,7 @@ locals {
         NODE_GROUP_ROLE = data.terraform_remote_state.eks.outputs.eks_node_group_role_arn
       }
     )
-  ))
+  )
   # aws_auth_configmap_data = yamlencode({
   #   "data" : {
   #     #mapRoles : yamlencode(concat(yamldecode(data.kubernetes_config_map.deafult_aws_auth.data.mapRoles), local.settings.eks_cluster.aws_auth_config.cluster_admin))
