@@ -9,7 +9,7 @@ locals {
             {
               NODE_GROUP_ROLE = data.terraform_remote_state.eks.outputs.eks_node_group_role_arn
             }
-          )
+          ).mapRoles
         )
       )
       mapUsers : yamlencode(
@@ -20,7 +20,7 @@ locals {
               AWS_ACCOUNT_ID = data.aws_caller_identity.current.account_id
 
             }
-          )
+          ).mapUsers
         )
       )
     }
