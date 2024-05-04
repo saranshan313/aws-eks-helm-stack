@@ -4,22 +4,21 @@ locals {
     "data" : {
       mapRoles : yamlencode(
         jsondecode(
-          templatefile(
-            "${path.module}/policies/aws-auth.json",
-            {
-              NODE_GROUP_ROLE = data.terraform_remote_state.eks.outputs.eks_node_group_role_arn
-            }
+          replace(
+            file("${path.module}/policies/aws-auth.json",
+              "NODE_GROUP_ROLE",
+              data.terraform_remote_state.eks.outputs.eks_node_group_role_arn
+            )
           ).mapRoles
         )
       )
       mapUsers : yamlencode(
         jsondecode(
-          templatefile(
-            "${path.module}/policies/aws-auth.json",
-            {
-              AWS_ACCOUNT_ID = data.aws_caller_identity.current.account_id
-
-            }
+          replace(
+            file("${path.module}/policies/aws-auth.json",
+              "AWS_ACCOUNT_ID",
+              data.aws_caller_identity.current.account_id
+            )
           ).mapUsers
         )
       )
