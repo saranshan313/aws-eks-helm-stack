@@ -3,8 +3,20 @@ locals {
   aws_auth_configmap_data = yamlencode({
     "data" : {
       #mapRoles : yamlencode(concat(yamldecode(data.kubernetes_config_map.deafult_aws_auth.data.mapRoles), local.settings.eks_cluster.aws_auth_config.cluster_admin))
-      mapRoles : data.kubernetes_config_map.deafult_aws_auth.data.mapRoles
-      mapUsers : yamlencode(local.settings.eks_cluster.aws_auth_config.cluster_admin)
+      #mapRoles : data.kubernetes_config_map.deafult_aws_auth.data.mapRoles
+      mapRoles : yamlencode(
+        replace(
+          local.settings.eks_cluster.aws_auth_config.cluster_admin_roles,
+          "NODEGROUP_ROLE_ARN",
+          data.terraform_remote_state.vpc.outputs.eks_node_group_role_arn
+        )
+      )
+      mapUsers : yamlencode(
+        replace(local.settings.eks_cluster.aws_auth_config.cluster_admin_users,
+          "AWS_ACCOUNT_ID",
+          data.aws_caller_identity.current.account_id
+        )
+      )
       #      mapAccounts = yamlencode(local.map_accounts)
     }
   })
@@ -237,6 +249,10 @@ resource "kubectl_manifest" "karpenter_ec2nodeclass" {
       securityGroupSelectorTerms:
         - tags:
             karpenter.sh/discovery: "${data.terraform_remote_state.eks.outputs.eks_cluster_name}"
+      tags:
+        env: "${local.settings.env}"
+        region: "${local.settings.region}"    
+        name: "ec2-${local.settings.env}-${local.settings.region}"  
   YAML
 
   depends_on = [
