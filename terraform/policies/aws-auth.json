@@ -1,23 +1,21 @@
 {
-    "data": {
-        "mapRoles": [
-            {
-                "rolearn": "NODE_GROUP_ROLE",
-                "username": "system:node:{{EC2PrivateDNSName}}",
-                "groups": [
-                    "system:bootstrappers",
-                    "system:nodes"
-                ]
-            }
-        ],
-        "mapUsers": [
-            {
-                "userarn": "arn:aws:iam::AWS_ACCOUNT_ID:user/cloud_user",
-                "username": "CloudAdmin",
-                "groups": [
-                    "system:masters"
-                ]
-            }
-        ]
-    }
+    "mapRoles": [
+        {
+            "rolearn": "NODE_GROUP_ROLE",
+            "username": "system:node:{{EC2PrivateDNSName}}",
+            "groups": [
+                "system:bootstrappers",
+                "system:nodes"
+            ]
+        }
+    ],
+    "mapUsers": [
+        {
+            "userarn": "arn:aws:iam::AWS_ACCOUNT_ID:user/cloud_user",
+            "username": "CloudAdmin",
+            "groups": [
+                "system:masters"
+            ]
+        }
+    ]
 }

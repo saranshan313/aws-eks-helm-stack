@@ -1,64 +1,71 @@
-#Add Admin user to AWS Auth Config Map to provide access to EKS Cluster
-locals {
-  aws_auth_configmap_data = yamlencode({
-    "data" : {
-      mapRoles : yamlencode(
-        jsondecode(
-          replace(
-            file("${path.module}/policies/aws-auth.json"),
-            "NODE_GROUP_ROLE",
-            data.terraform_remote_state.eks.outputs.eks_node_group_role_arn
-          )
-        ).mapRoles
-      )
-      mapUsers : yamlencode(
-        jsondecode(
-          replace(
-            file("${path.module}/policies/aws-auth.json"),
-            "AWS_ACCOUNT_ID",
-            data.aws_caller_identity.current.account_id
-          )
-        ).mapUsers
-      )
-    }
-  })
+#Add Admin users and roles to AWS Auth Config Map to provide access to EKS Cluster
+# locals {
+#   aws_auth_configmap_data = yamlencode({
+#     "data" : {
+#       mapRoles : yamlencode(
+#         jsondecode(
+#           replace(
+#             file("${path.module}/policies/aws-auth.json"),
+#             "NODE_GROUP_ROLE",
+#             data.terraform_remote_state.eks.outputs.eks_node_group_role_arn
+#           )
+#         ).mapRoles
+#       )
+#       mapUsers : yamlencode(
+#         jsondecode(
+#           replace(
+#             file("${path.module}/policies/aws-auth.json"),
+#             "AWS_ACCOUNT_ID",
+#             data.aws_caller_identity.current.account_id
+#           )
+#         ).mapUsers
+#       )
+#     }
+#   })
+# }
+
+resource "kubernetes_config_map_v1_data" "aws_auth" {
+  force = true
+
+  metadata {
+    name      = "aws-auth"
+    namespace = "kube-system"
+  }
+
+  data = {
+    mapRoles = yamlencode(
+      jsondecode(
+        replace(
+          file("${path.module}/policies/aws-auth.json"),
+          "NODE_GROUP_ROLE",
+          data.terraform_remote_state.eks.outputs.eks_node_group_role_arn
+        )
+      ).mapRoles
+    )
+    mapUsers = yamlencode(
+      jsondecode(
+        replace(
+          file("${path.module}/policies/aws-auth.json"),
+          "AWS_ACCOUNT_ID",
+          data.aws_caller_identity.current.account_id
+        )
+      ).mapUsers
+    )
+  }
 }
 
-# aws_auth_configmap_data = yamlencode({
-#   "data" : {
-#     #mapRoles : yamlencode(concat(yamldecode(data.kubernetes_config_map.deafult_aws_auth.data.mapRoles), local.settings.eks_cluster.aws_auth_config.cluster_admin))
-#     #mapRoles : data.kubernetes_config_map.deafult_aws_auth.data.mapRoles
-#     mapRoles : yamlencode(
-#       replace(
-#         tostring(local.settings.eks_cluster.aws_auth_config.cluster_admin_roles),
-#         "NODEGROUP_ROLE_ARN",
-#         data.terraform_remote_state.eks.outputs.eks_node_group_role_arn
-#       )
-#     )
-#     mapUsers : yamlencode(
-#       replace(
-#         tostring(local.settings.eks_cluster.aws_auth_config.cluster_admin_users),
-#         "AWS_ACCOUNT_ID",
-#         data.aws_caller_identity.current.account_id
-#       )
-#     )
-#     #      mapAccounts = yamlencode(local.map_accounts)
-#   }
-# })
-#}
-
-resource "kubectl_manifest" "aws_auth" {
-  yaml_body = <<YAML
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/managed-by: Terraform
-  name: aws-auth
-  namespace: kube-system
-${local.aws_auth_configmap_data}
-YAML
-}
+# resource "kubectl_manifest" "aws_auth" {
+#   yaml_body = <<YAML
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   labels:
+#     app.kubernetes.io/managed-by: Terraform
+#   name: aws-auth
+#   namespace: kube-system
+# ${local.aws_auth_configmap_data}
+# YAML
+# }
 
 #Install ALB Ingress Controller
 resource "helm_release" "alb_controller" {
