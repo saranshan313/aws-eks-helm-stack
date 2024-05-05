@@ -284,7 +284,7 @@ resource "kubectl_manifest" "karpenter_ec2nodeclass" {
       tags:
         env: "${local.settings.env}"
         region: "${local.settings.region}"    
-        name: "ec2-${local.settings.env}-${local.settings.region}"  
+        Name: "node-${data.terraform_remote_state.eks.outputs.eks_cluster_name}"  
   YAML
 
   depends_on = [
