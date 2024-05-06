@@ -79,12 +79,12 @@ data "aws_caller_identity" "current" {}
 #data "aws_ecrpublic_authorization_token" "token" {}
 
 #Data to fetch existing AWS auth config data
-data "kubernetes_config_map" "deafult_aws_auth" {
-  metadata {
-    name      = "aws-auth"
-    namespace = "kube-system"
-  }
-}
+# data "kubernetes_config_map" "deafult_aws_auth" {
+#   metadata {
+#     name      = "aws-auth"
+#     namespace = "kube-system"
+#   }
+# }
 
 data "http" "karpenter_nodepool_crd" {
   url = "https://raw.githubusercontent.com/aws/karpenter-provider-aws/${local.settings.karpenter_controller.chart_version}/pkg/apis/crds/karpenter.sh_nodepools.yaml"
