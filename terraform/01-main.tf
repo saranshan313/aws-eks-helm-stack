@@ -87,7 +87,7 @@ data "aws_caller_identity" "current" {}
 # }
 
 data "http" "karpenter_nodepool_crd" {
-  url = "https://raw.githubusercontent.com/aws/karpenter-provider-aws/${local.settings.karpenter_controller.chart_version}/pkg/apis/crds/karpenter.sh_nodepools.yaml"
+  url = "https://raw.githubusercontent.com/aws/karpenter-provider-aws/v${local.settings.karpenter_controller.chart_version}/pkg/apis/crds/karpenter.sh_nodepools.yaml"
 }
 
 data "kubectl_file_documents" "karpenter_nodepool_crd" {
@@ -95,7 +95,7 @@ data "kubectl_file_documents" "karpenter_nodepool_crd" {
 }
 
 data "http" "karpenter_nodeclass_crd" {
-  url = "https://raw.githubusercontent.com/aws/karpenter-provider-aws/${local.settings.karpenter_controller.chart_version}/pkg/apis/crds/karpenter.k8s.aws_ec2nodeclasses.yaml"
+  url = "https://raw.githubusercontent.com/aws/karpenter-provider-aws/v${local.settings.karpenter_controller.chart_version}/pkg/apis/crds/karpenter.k8s.aws_ec2nodeclasses.yaml"
 }
 
 data "kubectl_file_documents" "karpenter_nodeclass_crd" {
@@ -103,7 +103,7 @@ data "kubectl_file_documents" "karpenter_nodeclass_crd" {
 }
 
 data "http" "karpenter_nodeclaim_crd" {
-  url = "https://raw.githubusercontent.com/aws/karpenter-provider-aws/${local.settings.karpenter_controller.chart_version}/pkg/apis/crds/karpenter.sh_nodeclaims.yaml"
+  url = "https://raw.githubusercontent.com/aws/karpenter-provider-aws/v${local.settings.karpenter_controller.chart_version}/pkg/apis/crds/karpenter.sh_nodeclaims.yaml"
 }
 
 data "kubectl_file_documents" "karpenter_nodeclaim_crd" {
