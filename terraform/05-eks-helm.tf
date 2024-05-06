@@ -24,6 +24,7 @@
 #   })
 # }
 
+# Add Admin users and roles to AWS Auth Config Map to provide access to EKS Cluster
 resource "kubernetes_config_map_v1_data" "aws_auth" {
   force = true
 
@@ -68,8 +69,24 @@ resource "kubernetes_config_map_v1_data" "aws_auth" {
 # }
 
 #Install ALB Ingress Controller
-resource "helm_release" "alb_controller" {
+resource "aws_ec2_tag" "alb_controller_public_subnets_tags" {
+  for_each    = data.terraform_remote_state.vpc.outputs.network_public_subnets
+  resource_id = each.value
+  key         = "kubernetes.io/role/elb"
+  value       = "1"
+}
 
+resource "aws_ec2_tag" "alb_controller_public_private_subnets_tags" {
+  for_each = merge(
+    data.terraform_remote_state.vpc.outputs.network_public_subnets,
+    data.terraform_remote_state.vpc.outputs.network_application_subnets
+  )
+  resource_id = each.value
+  key         = "kubernetes.io/cluster/${data.terraform_remote_state.eks.outputs.eks_cluster_name}"
+  value       = "owned"
+}
+
+resource "helm_release" "alb_controller" {
   name       = local.settings.alb_ingress_controller.chart_name
   chart      = local.settings.alb_ingress_controller.chart_release_name
   repository = local.settings.alb_ingress_controller.chart_repo_url
@@ -128,14 +145,14 @@ resource "helm_release" "alb_controller" {
 }
 
 #Install Karpenter Controller
-resource "aws_ec2_tag" "applications_subnets" {
+resource "aws_ec2_tag" "karpenter_subnets_tags" {
   for_each    = data.terraform_remote_state.vpc.outputs.network_application_subnets
   resource_id = each.value
   key         = "karpenter.sh/discovery"
   value       = data.terraform_remote_state.eks.outputs.eks_cluster_name
 }
 
-resource "aws_ec2_tag" "nodegrp_sgs" {
+resource "aws_ec2_tag" "nodegrp_sgs_tags" {
   for_each    = toset(data.terraform_remote_state.eks.outputs.eks_nodegrp_sgs)
   resource_id = each.value
   key         = "karpenter.sh/discovery"
