@@ -53,3 +53,8 @@ secret_store_provider_aws:
   #chart_version: 0.36.0
   namespace: secrets-store-provider-aws
   create_namespace: true
+
+#EKS Application Role
+eks_app_role:
+  namespace: registration-app
+  service_account: registration-app
