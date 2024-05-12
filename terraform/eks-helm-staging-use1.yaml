@@ -21,7 +21,7 @@ alb_ingress_controller:
   chart_name: aws-load-balancer-controller
   chart_release_name: aws-load-balancer-controller
   chart_repo_url: https://aws.github.io/eks-charts
-  #chart_version: 1.7.2
+  chart_version: 1.7.2
   namespace: alb-ingress-controller
   create_namespace: true
   service_account: alb-ingress-controller-sa  
@@ -31,7 +31,7 @@ karpenter_controller:
   chart_name: karpenter
   chart_release_name: karpenter
   chart_repo_url: oci://public.ecr.aws/karpenter
-  #chart_version: 0.36.0
+  chart_version: 0.36.0
   namespace: karpenter-controller
   create_namespace: true
   service_account: karpenter-controller-sa
