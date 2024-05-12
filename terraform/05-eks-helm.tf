@@ -92,7 +92,7 @@ resource "helm_release" "alb_controller" {
   repository = local.settings.alb_ingress_controller.chart_repo_url
   #repository_username = data.aws_ecrpublic_authorization_token.token.user_name
   #repository_password = data.aws_ecrpublic_authorization_token.token.password
-  version   = local.settings.alb_ingress_controller.chart_version
+  #version   = local.settings.alb_ingress_controller.chart_version
   namespace = local.settings.alb_ingress_controller.namespace
 
   create_namespace = local.settings.alb_ingress_controller.create_namespace
@@ -165,7 +165,7 @@ resource "helm_release" "karpenter_controller" {
   repository = local.settings.karpenter_controller.chart_repo_url
   #repository_username = data.aws_ecrpublic_authorization_token.token.user_name
   #repository_password = data.aws_ecrpublic_authorization_token.token.password
-  version          = local.settings.karpenter_controller.chart_version
+  #version          = local.settings.karpenter_controller.chart_version
   namespace        = local.settings.karpenter_controller.namespace
   wait             = false
   create_namespace = local.settings.karpenter_controller.create_namespace
@@ -307,4 +307,15 @@ resource "kubectl_manifest" "karpenter_ec2nodeclass" {
   depends_on = [
     helm_release.karpenter_controller
   ]
+}
+
+#Secret store CSI Driver and Secret Store CSI Driver Provider AWS
+resource "helm_release" "kubernetes_secret_store_csi_driver" {
+  name       = local.settings.kubernetes_secret_store_csi.chart_name
+  chart      = local.settings.kubernetes_secret_store_csi.chart_release_name
+  repository = local.settings.kubernetes_secret_store_csi.chart_repo_url
+  #  version          = local.settings.kubernetes_secret_store_csi.chart_version
+  namespace        = local.settings.kubernetes_secret_store_csi.namespace
+  wait             = false
+  create_namespace = local.settings.kubernetes_secret_store_csi.create_namespace
 }
