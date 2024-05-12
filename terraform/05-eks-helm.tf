@@ -319,3 +319,13 @@ resource "helm_release" "kubernetes_secret_store_csi_driver" {
   wait             = false
   create_namespace = local.settings.kubernetes_secret_store_csi.create_namespace
 }
+
+resource "helm_release" "secret_store_provider_aws" {
+  name       = local.settings.secret_store_provider_aws.chart_name
+  chart      = local.settings.secret_store_provider_aws.chart_release_name
+  repository = local.settings.secret_store_provider_aws.chart_repo_url
+  #  version          = local.settings.kubernetes_secret_store_csi.chart_version
+  namespace        = local.settings.secret_store_provider_aws.namespace
+  wait             = false
+  create_namespace = local.settings.secret_store_provider_aws.create_namespace
+}
