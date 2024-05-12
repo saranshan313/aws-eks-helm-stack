@@ -39,7 +39,7 @@ karpenter_controller:
 #Kubernetes secrets store csi driver
 kubernetes_secret_store_csi:
   chart_name: secrets-store-csi-driver
-  chart_release_name: kubernetes-secrets-store-csi
+  chart_release_name: secrets-store-csi-driver
   chart_repo_url: https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
   #chart_version: 0.36.0
   namespace: kube-secrets-store-csi
