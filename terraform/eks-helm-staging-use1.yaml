@@ -7,13 +7,13 @@ env: staging
 #     cluster_admin_roles:
 #       - rolearn: NODEGROUP_ROLE_ARN
 #         username: system:node:{{EC2PrivateDNSName}}
-#         groups: 
+#         groups:
 #           - system:bootstrappers
 #           - system:nodes
 #     cluster_admin_users:
 #       - userarn: arn:aws:iam::ACCOUNT_ID:user/cloud_user
 #         username: ClusterAdmin
-#         groups: 
+#         groups:
 #           - system:masters
 
 #ALB Ingress Controller
@@ -24,7 +24,7 @@ alb_ingress_controller:
   chart_version: 1.7.2
   namespace: alb-ingress-controller
   create_namespace: true
-  service_account: alb-ingress-controller-sa  
+  service_account: alb-ingress-controller-sa
 
 #Karpenter Controller
 karpenter_controller:
@@ -49,7 +49,7 @@ kubernetes_secret_store_csi:
 secret_store_provider_aws:
   chart_name: secrets-store-csi-driver-provider-aws
   chart_release_name: secrets-store-csi-driver-provider-aws
-  chart_repo_url: https://github.com/aws/secrets-store-csi-driver-provider-aws/tree/main/charts/secrets-store-csi-driver-provider-aws
+  chart_repo_url: https://aws.github.io/secrets-store-csi-driver-provider-aws
   #chart_version: 0.36.0
   namespace: secrets-store-provider-aws
-  create_namespace: true  
+  create_namespace: true
