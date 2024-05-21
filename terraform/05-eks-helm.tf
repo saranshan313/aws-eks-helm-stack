@@ -318,6 +318,11 @@ resource "helm_release" "kubernetes_secret_store_csi_driver" {
   namespace        = local.settings.kubernetes_secret_store_csi.namespace
   wait             = false
   create_namespace = local.settings.kubernetes_secret_store_csi.create_namespace
+
+  set {
+    name  = "syncSecret.enabled"
+    value = true
+  }
 }
 
 resource "helm_release" "secret_store_provider_aws" {
