@@ -321,7 +321,7 @@ resource "helm_release" "kubernetes_secret_store_csi_driver" {
 
   set {
     name  = "syncSecret.enabled"
-    value = "true"
+    value = true
   }
 }
 
